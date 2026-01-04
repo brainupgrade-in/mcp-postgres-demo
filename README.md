@@ -34,7 +34,7 @@ Add to your Claude Desktop config:
   "mcpServers": {
     "postgres": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://ai_reader:demo123@localhost:5432/ecommerce"]
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://admin:admin123@localhost:5432/ecommerce"]
     }
   }
 }
@@ -43,8 +43,10 @@ Add to your Claude Desktop config:
 Or with Claude Code CLI:
 
 ```bash
-claude mcp add postgres -- npx -y @modelcontextprotocol/server-postgres "postgresql://ai_reader:demo123@localhost:5432/ecommerce"
+claude mcp add postgres -- npx -y @modelcontextprotocol/server-postgres "postgresql://admin:admin123@localhost:5432/ecommerce"
 ```
+
+> **Production Tip:** Use the read-only user `ai_reader:demo123` instead of admin for security.
 
 ### 3. Restart Claude Desktop
 
@@ -78,9 +80,22 @@ claude mcp add postgres -- npx -y @modelcontextprotocol/server-postgres "postgre
 
 ## Security Best Practices
 
-**IMPORTANT:** Always use read-only credentials for AI access!
+**IMPORTANT:** Always use read-only credentials for AI access in production!
 
-This demo includes a read-only user (`ai_reader`) with SELECT-only permissions:
+This demo includes two users:
+
+| User | Password | Access | Use Case |
+|------|----------|--------|----------|
+| `admin` | `admin123` | Full access | Quick testing |
+| `ai_reader` | `demo123` | SELECT only | Production/secure |
+
+**For production, switch to read-only:**
+
+```bash
+claude mcp add postgres -- npx -y @modelcontextprotocol/server-postgres "postgresql://ai_reader:demo123@localhost:5432/ecommerce"
+```
+
+The `ai_reader` user is created automatically with SELECT-only permissions:
 
 ```sql
 CREATE USER ai_reader WITH PASSWORD 'demo123';

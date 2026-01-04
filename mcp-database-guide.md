@@ -54,7 +54,7 @@ Add to your Claude Desktop config:
       "args": [
         "-y",
         "@modelcontextprotocol/server-postgres",
-        "postgresql://ai_reader:demo123@localhost:5432/ecommerce"
+        "postgresql://admin:admin123@localhost:5432/ecommerce"
       ]
     }
   }
@@ -64,8 +64,11 @@ Add to your Claude Desktop config:
 ### Option B: Using Claude Code CLI
 
 ```bash
-claude mcp add postgres -- npx -y @modelcontextprotocol/server-postgres "postgresql://ai_reader:demo123@localhost:5432/ecommerce"
+claude mcp add postgres -- npx -y @modelcontextprotocol/server-postgres "postgresql://admin:admin123@localhost:5432/ecommerce"
 ```
+
+> **Security Note:** For production, use the read-only user instead:
+> `postgresql://ai_reader:demo123@localhost:5432/ecommerce`
 
 **Verify connection:**
 
@@ -99,18 +102,25 @@ docker ps
 ### Connection String Breakdown
 
 ```
-postgresql://ai_reader:demo123@localhost:5432/ecommerce
-            └────┬────┘└──┬──┘ └───┬───┘ └─┬─┘ └───┬───┘
-            username  password   host   port  database
+postgresql://admin:admin123@localhost:5432/ecommerce
+            └──┬─┘ └───┬──┘ └───┬───┘ └─┬─┘ └───┬───┘
+           username password   host   port  database
 ```
 
 | Component | Value | Description |
 |-----------|-------|-------------|
-| Username | `ai_reader` | Read-only user |
-| Password | `demo123` | Demo password |
+| Username | `admin` | Database admin (or `ai_reader` for read-only) |
+| Password | `admin123` | Admin password (or `demo123` for ai_reader) |
 | Host | `localhost` | Database server |
 | Port | `5432` | PostgreSQL default |
 | Database | `ecommerce` | Sample database |
+
+### Available Users
+
+| User | Password | Access Level |
+|------|----------|--------------|
+| `admin` | `admin123` | Full access (for testing) |
+| `ai_reader` | `demo123` | SELECT only (for production) |
 
 ---
 
